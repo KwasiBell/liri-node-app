@@ -1,6 +1,7 @@
 require("dotenv").config();
 
 var axios = require("axios");
+var moment = require("moment");
 var spotifyKeys = require("./keys.js")
 var Spotify = require("node-spotify-api");
 
@@ -63,8 +64,25 @@ if (command === "movie-this") {
 
 
     function concertThis(band) {
-  var queryURL = "https://rest.bandsintown.com/artists/" + band + "/events?app_id=codingbootcamp"
-}
+      var queryURL = "https://rest.bandsintown.com/artists/" + band + "/events?app_id=codingbootcamp";
+      axios.get(queryURL)
+      .then(function (response) {
+        console.log(response.data);
+        var jsonData = response.data;
+
+        for(var i=0; i<jsonData.length; i++){
+//Name of the venue
+// Venue location
+// Date of the Event (use moment to format this as "MM/DD/YYYY")
+          console.log("Name of the Venue : " + jsonData[i].venue.name);
+          console.log("Venue Location : " + jsonData[i].venue.city + ", " + jsonData[i].venue.region + " " + jsonData[i].venue.country);
+          console.log("Date of the Event : " + moment(jsonData[i].datetime).format("MM/DD/YYYY"));
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    }
 
 
     function spotifySong(songName) {
